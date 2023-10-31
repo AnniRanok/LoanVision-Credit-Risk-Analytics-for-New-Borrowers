@@ -2,23 +2,31 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator, root_validator
 from typing import Optional
 import pickle
+import requests
 import pandas as pd
 import json
 from sklearn.linear_model import LogisticRegression
 import ssl
 import dill
 import uvicorn
+from io import BytesIO
+from io import StringIO
 from fastapi.responses import HTMLResponse
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 
-with open('/Users/innakonar/Desktop/Project_7/best_model_filename.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
-# Deserialize SHAP explainer    
-with open('/Users/innakonar/Desktop/Project_7/explainer.pkl', 'rb') as file:
-    explainer = pickle.load(file)
+
+# URLs from  GitHub repository
+URL_MODEL = "https://raw.githubusercontent.com/AnniRanok/OC_Projet_7/app/best_model_filename.pkl"
+response = requests.get(URL_MODEL)
+model = pickle.loads(response.content)
+
+URL_EXPLAINER = "https://raw.githubusercontent.com/AnniRanok/OC_Projet_7/app/explainer.pkl"
+response = requests.get(URL_EXPLAINER)
+explainer = pickle.loads(response.content)
+
 app = FastAPI()
 
 N_CUSTOMERS = 1000
@@ -30,7 +38,10 @@ MAIN_COLUMNS = ['CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY', 'CNT_CHILDREN'
 CUSTOM_THRESHOLD = 0.7
 
 # Get test dataframe
-test_df = pd.read_csv("/Users/innakonar/Desktop/Project_7/test_feature_engineering.csv")
+URL_CSV = "https://raw.githubusercontent.com/AnniRanok/OC_Projet_7/app/test_feature_engineering.csv"
+response = requests.get(URL_CSV)
+data = StringIO(response.text)
+test_df = pd.read_csv(data)
 test_columns = test_df.columns
 
 # Before calling prepare_data:
@@ -110,6 +121,7 @@ def colmuns_neighbors(cust_id: int):
     return modes
 
 
+
 @app.get("/predict/id={cust_id}")
 def predict(cust_id: int):
     """ Return the customer predictions of repay failure (class 1) """
@@ -119,7 +131,6 @@ def predict(cust_id: int):
     processed_row = preprocess_data(row)
     proba = model.predict_proba(processed_row)[0][1]  # prediction of class 1
     return {'proba': proba.tolist()}
-
 
 
 @app.get("/shap")
@@ -148,5 +159,7 @@ def importances():
     return imp_df.to_json()
 
 
-if __name__ == "__main__":
-    uvicorn.run("scoring_api:app", reload=True, host="0.0.0.0", port=8000)
+
+
+
+
