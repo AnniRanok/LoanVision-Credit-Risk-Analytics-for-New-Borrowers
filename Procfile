@@ -1,1 +1,3 @@
-web: python api.py && python app.py
+web: python api.py
+worker: python app.py
+
