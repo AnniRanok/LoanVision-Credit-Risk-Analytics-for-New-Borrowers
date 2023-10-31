@@ -11,18 +11,15 @@ import pickle
 import json
 import numpy as np
 
-API_URL = "http://127.0.0.1:8000/"
+
+# API_URL = "http://127.0.0.1:8000/"
+
+API_URL = "https://api-myapp.herokuapp.com/"
+
 TIMEOUT = (5, 30)
 CLASSES_NAMES = ['REPAY SUCCESS', 'REPAY FAILURE']
 CLASSES_COLORS = ['green', 'red']
-
-
-# Décodeur personnalisé
-def custom_decoder(obj):
-    if 'Infinity' in obj:
-        return float('inf')
-    raise ValueError
-    
+  
     
 #Return altair chart of logistic regression feature importances    
 @st.cache_data()
@@ -94,6 +91,7 @@ def get_shap_explanation(SK_ID_CURR):
                                    feature_names=content['features'])
     return explanation  
 
+
 #Get feature importance
 def get_feature_importances():
     response = requests.get(API_URL + "importances", timeout=TIMEOUT)
@@ -110,6 +108,36 @@ def st_shap(plot, height=None):
     shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
     components.html(shap_html, height=height)
     
+
+st.markdown("""
+<style>
+body {
+    background-color: #59ba6b;
+}
+</style>
+""", unsafe_allow_html=True)
+
+...
+st.markdown("""
+<style>
+body {
+    background-color: #59ba6b;
+}
+h1 {
+    color: blue;
+}
+button {
+    color: white;
+    background-color: tomato;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+...
+
 st.title('Interactive Dashboard')
 st.header('Predict Loan Default Risk')
 st.image("https://webnews.bg/uploads/images/50/1650/291650/768x432.jpg?_=1493804010")
@@ -118,16 +146,15 @@ st.image("https://webnews.bg/uploads/images/50/1650/291650/768x432.jpg?_=1493804
 st.sidebar.subheader("Settings")
 
 # # Select the prediction threshold
-# pred_thresh = st.sidebar.slider("Prediction threshold : ", 0.15, 0.50, value=0.50, step=0.05,
-#                                 help="Threshold of the prediction for class 1 : repay failure (standard=0.5)")
-pred_thresh =0.6
+pred_thresh = st.sidebar.slider("Prediction threshold : ", 0.15, 0.50, value=0.50, step=0.05,
+                                help="Threshold of the prediction for class 1 : repay failure (standard=0.5)")
 # Select type of explanation
 shap_plot_type = st.sidebar.radio("Select the SHAP plot type :", ('Waterfall', 'Bar'),
                                   help="Type of plot for the SHAP explanation")
 # Select source of feature importance
 feat_imp_source = st.sidebar.radio("Feature importances source:", ('Model', 'SHAP'))
 
-# Create tabs
+#  Create tabs
 tab_single, tab_all = st.tabs(["Customer", "All customers"])
 
 st.header('Prêt à Spend')
@@ -160,11 +187,10 @@ with tab_all:
         fig, _ = plt.subplots()
         fig.suptitle('Top 15 feature importances (test set)', fontsize=18)
         shap.summary_plot(shap_values, max_display=15, plot_type='bar', plot_size=[12, 6], show=False)
+       
         st.pyplot(fig)
         expander = st.expander("About the feature importances..")
         expander.write("The feature importances displayed is computed from the SHAP values of the new customers. (test data)")
-
-
 
     
 # Specific customer tab
@@ -183,10 +209,9 @@ with tab_single:
     st.subheader("Customer information")
     cust_df = get_cust_columns(cust_select_id).rename(cust_names[cust_select_id])
     neighbors_df = get_columns_neighbors(cust_select_id).rename("Neighbors average")
-    mean_df = get_columns_mean().rename("Customers average")
-    st.dataframe(pd.concat([cust_df, neighbors_df, mean_df], axis=1))
-    
-    
+    mean_df = get_columns_mean().rename("Customer")
+    st.dataframe(pd.concat([neighbors_df, mean_df], axis=1))
+   
     
     
     # Display prediction
@@ -227,5 +252,10 @@ with tab_single:
     expander.write("The above plot displays the explanations for the individual prediction of the customer. \
                     It shows the postive and negative contribution of the features. \
                     The final SHAP value is not equal to the prediction probability.")
-
+    
+st.image("https://www.nesto.ca/wp-content/uploads/2022/06/template-020.png")
 st.write("")
+
+
+
+
