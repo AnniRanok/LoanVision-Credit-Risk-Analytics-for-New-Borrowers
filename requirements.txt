@@ -9,5 +9,7 @@ numpy==1.25.2
 fastapi==0.68.0  
 uvicorn==0.15.0
 dill==0.3.4
+redis==3.5.3
+
 
 
