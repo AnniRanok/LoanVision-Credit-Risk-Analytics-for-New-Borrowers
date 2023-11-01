@@ -16,6 +16,8 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
+import app 
+
 
 
 # URLs from  GitHub repository
