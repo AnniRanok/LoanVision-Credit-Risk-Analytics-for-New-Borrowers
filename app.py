@@ -10,6 +10,12 @@ import names
 import pickle
 import json
 import numpy as np
+import os
+import redis
+
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+redis_conn = redis.StrictRedis.from_url(redis_url)
+
 
 
 # API_URL = "http://127.0.0.1:8000/"
