@@ -16,7 +16,12 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
-import app 
+import os
+import redis
+
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+redis_conn = redis.StrictRedis.from_url(redis_url)
+
 
 
 
