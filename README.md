@@ -41,7 +41,7 @@ Each application has an associated label indicating the client's repayment abili
 - **API & Deployment**: FastAPI, PythonAnywhere
 
 ## Links
-- **Application** : https://
+- **Application** :https://api-myapp.herokuapp.com/
 
 ## Next Steps
 Improve data processing for quicker predictions.
