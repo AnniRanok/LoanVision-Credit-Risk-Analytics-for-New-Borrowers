@@ -1,4 +1,9 @@
 # OC_Projet_7
+<<<<<<< HEAD
+=======
+HomeCredit Insight: Scoring &amp; Predictive Analytics Tool
+# OC_Projet_7
+>>>>>>> app
 ## HomeCredit Insight: Scoring &amp; Predictive Analytics Tool
 
 # Credit Scoring System: "Prêt à dépenser"   
@@ -41,7 +46,11 @@ Each application has an associated label indicating the client's repayment abili
 - **API & Deployment**: FastAPI, PythonAnywhere
 
 ## Links
+<<<<<<< HEAD
 - **Application** :https://api-myapp.herokuapp.com/
+=======
+- **Application** : https://api-myapp.herokuapp.com/
+>>>>>>> app
 
 ## Next Steps
 Improve data processing for quicker predictions.
