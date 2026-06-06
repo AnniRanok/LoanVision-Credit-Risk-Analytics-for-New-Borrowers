@@ -89,7 +89,7 @@ Model performance was evaluated using classification metrics with threshold tuni
 
 ## Status
 
-This project is a machine learning prototype for credit risk modeling and is intended for educational and exploratory purposes.
+This project developed as a machine learning prototype for credit risk modeling and model development workflows.
 
 
 ## Key Focus Areas
